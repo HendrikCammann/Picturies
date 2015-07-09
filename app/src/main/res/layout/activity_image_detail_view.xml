@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Alleine unterwegs"
+        android:id="@+id/image_view_title"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:textSize="30dp"
+        android:textColor="#ffa31258" />
+
+    <ImageView
+        android:layout_below="@+id/image_view_title"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:id="@+id/image_view_thumpnail"
+        android:src="@drawable/taxi"
+        android:cropToPadding="false"
+        android:scaleType="fitXY"
+        android:paddingTop="0dp"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/image_view_icon"
+        android:src="@drawable/report_icon"
+        android:layout_below="@+id/image_view_thumpnail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="New York Sommer 2015"
+        android:id="@+id/image_view_inreport"
+        android:layout_below="@+id/image_view_thumpnail"
+        android:layout_toRightOf="@+id/image_view_icon"
+        android:layout_toEndOf="@+id/image_view_icon"
+        android:layout_marginTop="24dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#ffa31258" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="24.06.2015"
+        android:id="@+id/image_view_date"
+        android:layout_below="@+id/image_view_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="14dp"
+        android:textColor="#ffa31258"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="'Heute mal alleine ohne Kinder unterwegs - eine Taxifahrt durch Manhatten sollte jeder mal gemacht haben. Über den Broadway bis zur Lady Liberty - leider dauernd im Stau.'"
+        android:id="@+id/image_view_text"
+        android:layout_below="@+id/image_view_date"
+        android:layout_alignLeft="@+id/image_view_date"
+        android:layout_alignStart="@+id/image_view_date"
+        android:textColor="#ffa31258"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>

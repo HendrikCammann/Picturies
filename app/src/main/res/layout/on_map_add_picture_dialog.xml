@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff">
+
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="Abbrechen"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/cancel_button"
+        android:layout_marginLeft="10dp"
+        android:background="#ffa31258"
+        android:layout_marginBottom="15dp"
+        android:textSize="14dp"
+        android:textColor="#ffffffff" />
+
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="Speichern"
+        android:id="@+id/speichern_button"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/cancel_button"
+        android:layout_toEndOf="@+id/cancel_button"
+        android:background="#ffa31258"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:textColor="#ffffffff"
+        android:textSize="14dp"
+        android:singleLine="false" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:id="@+id/selectedImage"
+        android:src="@drawable/gallery"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp"
+        android:background="#a31258"
+        android:paddingTop="50dp"
+        android:cropToPadding="false"
+        android:paddingBottom="50dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_alignLeft="@+id/selectedImage"
+        android:layout_alignStart="@+id/selectedImage"
+        android:layout_below="@+id/selectedImage"
+        android:layout_marginTop="60dp"
+        android:hint="Titel"
+        android:textColor="#ffa31258"
+        android:textColorHint="#ffa31258"
+        android:singleLine="false"
+        android:editable="true"
+        android:shadowColor="#ffa31258"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="20dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText2"
+        android:layout_alignLeft="@+id/editText"
+        android:layout_alignStart="@+id/editText"
+        android:layout_below="@+id/editText"
+        android:hint="Beschreibung"
+        android:textColor="#ffa31258"
+        android:textColorHint="#ffa31258"
+        android:textColorLink="#ffa31258"
+        android:textColorHighlight="#ffa31258"
+        android:layout_marginRight="10dp"
+        android:textSize="20dp" />
+
+</RelativeLayout>

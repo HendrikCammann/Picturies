@@ -1,0 +1,18 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=2B:9C:B2:61:60:DD:57:75:A4:E9:AA:70:B8:66:34:16:B1:1F:6B:7F%3Bcom.project.charmander.googlemapstest
+
+    You can also add your credentials to an existing key, using this line:
+    2B:9C:B2:61:60:DD:57:75:A4:E9:AA:70:B8:66:34:16:B1:1F:6B:7F;com.project.charmander.googlemapstest
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyDKEZ4O2ch0ngl09LeNewEN17SVqm2lUU8
+    </string>
+</resources>
