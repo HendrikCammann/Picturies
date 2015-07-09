@@ -71,7 +71,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private LocationManager locationManager;
     private Double Lat = 47.61;
     private Double Lng = 7.61;
-    ImageView addImage;
     boolean mapOpen = true;
 
     //Fragments
@@ -81,9 +80,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     final Fragment settings = new SettingsActivity();
     final Fragment imageDetailView = new ImageDetailViewActivity();
     final Fragment imageListView = new ImageListViewActivity();
-
-    //?
-    EditText titel;
 
     //Kamera
     final Context contextForAddPicture = this;
@@ -188,18 +184,22 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                     case 0:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, createReport).commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 1:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, readReport).commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 2:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, friends).commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 3:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, settings).commit();
+                        mDrawerLayout.closeDrawer(mDrawerList);
                         break;
                     case 4:
                         mapOpen = false;

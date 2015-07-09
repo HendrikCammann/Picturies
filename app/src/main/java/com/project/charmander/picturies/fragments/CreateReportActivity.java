@@ -19,9 +19,6 @@ import com.project.charmander.picturies.listItems.ImageListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hendrikcammann on 05.07.15.
- */
 public class CreateReportActivity extends Fragment {
 
     private RecyclerView imageList;
