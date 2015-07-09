@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,23 +50,31 @@ import com.project.charmander.picturies.fragments.ImageDetailViewActivity;
 import com.project.charmander.picturies.fragments.ImageListViewActivity;
 import com.project.charmander.picturies.fragments.ReadReportActivity;
 import com.project.charmander.picturies.fragments.SettingsActivity;
+import com.project.charmander.picturies.helper.UserSessionManager;
+import com.project.charmander.picturies.model.User;
+
+import java.util.HashMap;
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
+    public static final String TAG=MainActivity.class.getSimpleName();
 
+    //Navigation
     private ListView mDrawerList;
-    private GoogleMap mMap;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
 
+    //Maps
+    private GoogleMap mMap;
     private String provider;
     private LocationManager locationManager;
     private Double Lat = 47.61;
     private Double Lng = 7.61;
     ImageView addImage;
-    EditText titel;
+    boolean mapOpen = true;
 
+    //Fragments
     final Fragment createReport = new CreateReportActivity();
     final Fragment readReport = new ReadReportActivity();
     final Fragment friends = new FriendsActivity();
@@ -73,20 +82,38 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     final Fragment imageDetailView = new ImageDetailViewActivity();
     final Fragment imageListView = new ImageListViewActivity();
 
-    boolean mapOpen = true;
+    //?
+    EditText titel;
 
+    //Kamera
     final Context contextForAddPicture = this;
-
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 1888;
-
     private Dialog addPictureDialog;
     private Dialog addPictureFromCameraDialog;
+
+    //Login
+    UserSessionManager session;
+    public User mCurrentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        session = new UserSessionManager(getApplicationContext());
+
+        if(session.checkLogin()){
+            finish();
+        }
+
+        HashMap<String, String> user = session.getUserDetails();
+        String name = user.get(UserSessionManager.KEY_NAME);
+        String email = user.get(UserSessionManager.KEY_EMAIL);
+
+        Log.d(TAG, name + email);
+
 
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -173,6 +200,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                     case 3:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, settings).commit();
+                        break;
+                    case 4:
+                        mapOpen = false;
+                        session.logoutUser();
                         break;
                 }
             }
