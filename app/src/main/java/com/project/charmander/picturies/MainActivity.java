@@ -83,8 +83,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private Dialog addPictureDialog;
     private Dialog addPictureFromCameraDialog;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,13 +93,23 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         mActivityTitle = getTitle().toString();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10, this);
+
 
         Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setCostAllowed(false);
+        provider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(provider);
-//        Lat = location.getLatitude();
-//        Lng = location.getLongitude();
+
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+
+        try {
+            Lat = location.getLatitude ();
+            Lng = location.getLongitude ();
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
         addDrawerItems();
         setupDrawer();
@@ -244,7 +252,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private void setUpMap() {
 //        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), 9.5f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), 15.0f));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title("Current"));
     }
 
     @Override
@@ -266,8 +275,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
         Lat = location.getLatitude();
         Lng = location.getLongitude();
-        Float Zoom = mMap.getCameraPosition().zoom;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), Zoom));
+        Float zoom = mMap.getCameraPosition().zoom;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), zoom));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title("Current"));
     }
 
     @Override
