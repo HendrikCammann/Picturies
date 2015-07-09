@@ -344,8 +344,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         // result for picture add from gallery
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 
-            addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
-            titel = (EditText) addPictureDialog.findViewById(R.id.editText);
+            ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
+//            titel = (EditText) addPictureDialog.findViewById(R.id.editText);
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             addImage.setImageBitmap(photo);
         }
