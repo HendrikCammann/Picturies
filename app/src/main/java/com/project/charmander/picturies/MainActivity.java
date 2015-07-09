@@ -242,6 +242,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            mMap.setMyLocationEnabled(true);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -250,10 +251,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), 15.0f));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title("Current"));
     }
 
     @Override
@@ -277,7 +275,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Lng = location.getLongitude();
         Float zoom = mMap.getCameraPosition().zoom;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), zoom));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title("Current"));
     }
 
     @Override
