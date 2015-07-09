@@ -1,4 +1,4 @@
-package com.project.charmander.picturies;
+package com.project.charmander.picturies.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.project.charmander.picturies.listItems.FriendsListItem;
+import com.project.charmander.picturies.R;
 
 import java.util.Collections;
 import java.util.List;

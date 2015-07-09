@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,7 +19,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,6 +43,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.project.charmander.picturies.fragments.CreateReportActivity;
+import com.project.charmander.picturies.fragments.FriendsActivity;
+import com.project.charmander.picturies.fragments.ImageDetailViewActivity;
+import com.project.charmander.picturies.fragments.ImageListViewActivity;
+import com.project.charmander.picturies.fragments.ReadReportActivity;
+import com.project.charmander.picturies.fragments.SettingsActivity;
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
 
@@ -54,6 +58,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
+
     private String provider;
     private LocationManager locationManager;
     private Double Lat = 47.61;
@@ -136,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     private void addDrawerItems() {
-        String[] osArray = {"Bericht erstellen", "Berichte lesen", "Freunde", "Einstellungen"};
+        String[] osArray = {"Bericht erstellen", "Berichte lesen", "Freunde", "Einstellungen", "Logout"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
