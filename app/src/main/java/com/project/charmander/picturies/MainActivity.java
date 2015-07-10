@@ -402,7 +402,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 Toast.makeText(getBaseContext(), "Bild hinzugefügt", Toast.LENGTH_LONG).show();
 
                 //Datenbank
-                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
+
+//                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
             }
         });
 
@@ -437,9 +438,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText titel = (EditText) addPictureFromCameraDialog.findViewById(R.id.pictureTitleEditText);
-                final EditText description = (EditText) addPictureDialog.findViewById(R.id.pictureDescriptionEditText);
-                final ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
+                EditText titel = (EditText) addPictureFromCameraDialog.findViewById(R.id.pictureTitleEditText);
+                EditText description = (EditText) addPictureFromCameraDialog.findViewById(R.id.pictureDescriptionEditText);
+                ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
                 String titleInput = titel.getText().toString();
                 String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
