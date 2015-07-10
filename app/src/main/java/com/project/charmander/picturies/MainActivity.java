@@ -214,7 +214,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle("Navigation");
                 invalidateOptionsMenu();
             }
 
@@ -300,8 +300,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        String str = "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude();
-        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+//        String str = "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude();
+//        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
         Lat = location.getLatitude();
         Lng = location.getLongitude();
         Float zoom = mMap.getCameraPosition().zoom;

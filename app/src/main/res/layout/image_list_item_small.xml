@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,18 +8,46 @@
     android:visibility="visible">
 
     <ImageView
-        android:padding="8dp"
         android:id="@+id/image_thumpnail"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/taxi"/>
+        android:src="@drawable/ruth"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:cropToPadding="false"
+        android:adjustViewBounds="false"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:layout_gravity="center_vertical"
         android:id="@+id/image_information"
-        android:padding="8dp"
+        android:padding="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hendrik Cammann"/>
-</LinearLayout>
+        android:text="Hendrik Cammann"
+        android:textColor="@color/main"
+        android:textSize="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/image_thumpnail"
+        android:layout_toEndOf="@+id/image_thumpnail"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/main"
+        android:text="'Ein wundervoller Tag im Taxi - leider viel im Stau gestanden. Dafür aber eine tolles Gespräch mit dem Taxifahrer gehabt.'"
+        android:id="@+id/image_description"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/image_information"
+        android:layout_alignLeft="@+id/image_information"
+        android:layout_alignStart="@+id/image_information"
+        android:layout_marginTop="10dp"
+        android:textStyle="italic"
+        android:layout_marginBottom="10dp" />
+</RelativeLayout>

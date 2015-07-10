@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.project.charmander.picturies.listItems.ImageListItem;
@@ -26,6 +27,7 @@ public class ChooseImageAdapter extends RecyclerView.Adapter<ChooseImageAdapter.
 
     public ArrayList<Drawable> SelectedImages = new ArrayList();
     public ArrayList<String> SelectedInformation = new ArrayList();
+    public ArrayList<String> SelectedDescription = new ArrayList();
 
     public ChooseImageAdapter(Context context, List<ImageListItem> data) {
 
@@ -59,14 +61,17 @@ public class ChooseImageAdapter extends RecyclerView.Adapter<ChooseImageAdapter.
 
         TextView information;
         ImageView thumpnail;
-        LinearLayout view;
+        TextView description;
+        RelativeLayout view;
         boolean isSelcted = false;
 
         public ChooseImageViewHolder(View itemView) {
             super(itemView);
             information = (TextView) itemView.findViewById(R.id.image_information);
             thumpnail = (ImageView) itemView.findViewById(R.id.image_thumpnail);
-            view = (LinearLayout) itemView.findViewById(R.id.choose_image_item);
+            description = (TextView) itemView.findViewById(R.id.image_description);
+
+            view = (RelativeLayout) itemView.findViewById(R.id.choose_image_item);
             itemView.setOnClickListener(this);
         }
 
@@ -76,21 +81,29 @@ public class ChooseImageAdapter extends RecyclerView.Adapter<ChooseImageAdapter.
             if(!isSelcted) {
 
                 view.setBackground(new ColorDrawable(Color.parseColor("#a31258")));
+                information.setTextColor(Color.parseColor("#FFFFFF"));
+                description.setTextColor(Color.parseColor("#FFFFFF"));
                 Drawable thumpnailImage = thumpnail.getDrawable();
                 String informationString = information.getText().toString();
+                String descriptionString = description.getText().toString();
                 SelectedImages.add(thumpnailImage);
                 SelectedInformation.add(informationString);
+                SelectedDescription.add(descriptionString);
                 Toast.makeText(v.getContext(), "SELECTED", Toast.LENGTH_SHORT).show();
                 isSelcted = true;
             } else {
 
                 view.setBackground(new ColorDrawable(Color.parseColor("#FFFFFF")));
+                information.setTextColor(Color.parseColor("#a31258"));
+                description.setTextColor(Color.parseColor("#a31258"));
                 Drawable thumpnailImage = thumpnail.getDrawable();
                 String informationString = information.getText().toString();
+                String descriptionString = description.getText().toString();
 
-                if(SelectedImages.contains(thumpnailImage) && SelectedInformation.contains(informationString)) {
+                if(SelectedImages.contains(thumpnailImage) && SelectedInformation.contains(informationString) && SelectedDescription.contains(descriptionString)) {
                     SelectedImages.remove(thumpnailImage);
                     SelectedInformation.remove(informationString);
+                    SelectedDescription.remove(descriptionString);
                 }
 
                 Toast.makeText(v.getContext(), "DESELECTED", Toast.LENGTH_SHORT).show();

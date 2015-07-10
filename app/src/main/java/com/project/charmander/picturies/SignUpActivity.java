@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.project.charmander.picturies.helper.UserSessionManager;
 import com.squareup.okhttp.Call;
@@ -24,6 +25,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.Random;
 
 
 public class SignUpActivity extends AppCompatActivity {
@@ -34,6 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected EditText mPasswordEditText;
     protected EditText mEmailEditText;
     protected Button mSignUpButton;
+    protected ImageView mBackgroundImage;
 
     UserSessionManager session;
 
@@ -41,6 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        getSupportActionBar().hide();
 
         session = new UserSessionManager(getApplicationContext());
 
@@ -48,6 +52,10 @@ public class SignUpActivity extends AppCompatActivity {
         mPasswordEditText = (EditText) findViewById(R.id.passwordField);
         mEmailEditText = (EditText) findViewById(R.id.emailField);
         mSignUpButton = (Button) findViewById(R.id.signUpButton);
+        mBackgroundImage = (ImageView) findViewById(R.id.backgroundPicture);
+
+        //Change Background Picture
+        randomBackground();
 
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
 
@@ -148,6 +156,28 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void randomBackground() {
+        int min = 1;
+        int max = 4;
+
+        Random r = new Random();
+        int bgNumber = r.nextInt(max - min + 1) + min;
+
+        switch (bgNumber) {
+            case 1:
+                break;
+            case 2:
+                mBackgroundImage.setImageResource(R.drawable.background_2);
+                break;
+            case 3:
+                mBackgroundImage.setImageResource(R.drawable.background_3);
+                break;
+            case 4:
+                mBackgroundImage.setImageResource(R.drawable.background_4);
+                break;
+        }
     }
 }
 

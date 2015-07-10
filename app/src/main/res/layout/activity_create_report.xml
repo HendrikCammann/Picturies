@@ -59,7 +59,7 @@
         android:id="@+id/image_list"
         android:layout_below="@+id/chosse_pictures_headline"
         android:layout_width="match_parent"
-        android:layout_height="275dp" />
+        android:layout_height="310dp" />
 
     <Button
         android:layout_width="175dp"

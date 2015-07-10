@@ -36,6 +36,7 @@
                 android:drawable="@drawable/camera"
                 android:layout_gravity="bottom|end"
                 android:id="@+id/camera_button" />
+
         </FrameLayout>
     </RelativeLayout>
 

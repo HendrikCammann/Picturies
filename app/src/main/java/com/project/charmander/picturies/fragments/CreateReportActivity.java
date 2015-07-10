@@ -61,13 +61,15 @@ public class CreateReportActivity extends Fragment {
 
         List<ImageListItem> data = new ArrayList<>();
 
-        int[] thumpnails = {R.drawable.taxi, R.drawable.ruth, R.drawable.stefan, R.drawable.teacher, R.drawable.walter};
-        String[] informations = {"John", "Ruth", "Stefan", "Lehrer", "Walter"};
+        int[] thumpnails = {R.drawable.ruth, R.drawable.stefan, R.drawable.teacher, R.drawable.walter};
+        String[] informations = {"Brooklyn", "Lady Liberty", "Lehrer", "Walter"};
+        String[] descriptions = {"'Ein wundervoller Tag im Taxi - leider viel im Stau gestanden. Dafür aber eine tolles Gespräch mit dem Taxifahrer gehabt.'", "'Ein wundervoller Tag im Taxi - leider viel im Stau gestanden. Dafür aber eine tolles Gespräch mit dem Taxifahrer gehabt.'", "'Ein wundervoller Tag im Taxi - leider viel im Stau gestanden. Dafür aber eine tolles Gespräch mit dem Taxifahrer gehabt.'", "'Ein wundervoller Tag im Taxi - leider viel im Stau gestanden. Dafür aber eine tolles Gespräch mit dem Taxifahrer gehabt.'"};
 
-        for(int i = 0; i<thumpnails.length && i<informations.length; i++) {
+        for(int i = 0; i<thumpnails.length && i<informations.length && i<descriptions.length; i++) {
             ImageListItem current = new ImageListItem();
             current.iconId = thumpnails[i];
             current.title = informations[i];
+            current.description = descriptions[i];
 
             data.add(current);
         }

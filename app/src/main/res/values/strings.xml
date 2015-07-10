@@ -34,5 +34,7 @@
     <string name="network_unavailable_error_title">Network unavailable</string>
     <string name="login_unauthorized_error_title">Wrong password or username</string>
     <string name="login_unauthorized_error_message">Please make sure you enter a correct username or password.</string>
+    <string name="read_report">READ</string>
+    <string name="report_subheadline">your reports</string>
 
 </resources>

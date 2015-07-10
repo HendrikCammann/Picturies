@@ -40,8 +40,8 @@ public class ImageListViewActivity extends Fragment {
 
         List<ImageListItem> data = new ArrayList<>();
 
-        int[] thumpnails = {R.drawable.taxi, R.drawable.ruth, R.drawable.stefan, R.drawable.teacher, R.drawable.walter};
-        String[] informations = {"John", "Ruth", "Stefan", "Lehrer", "Walter"};
+        int[] thumpnails = {R.drawable.ruth, R.drawable.stefan, R.drawable.teacher, R.drawable.walter};
+        String[] informations = {"Ruth", "Stefan", "Lehrer", "Walter"};
 
         for(int i = 0; i<thumpnails.length && i<informations.length; i++) {
             ImageListItem current = new ImageListItem();

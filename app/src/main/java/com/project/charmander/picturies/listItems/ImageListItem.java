@@ -6,4 +6,5 @@ package com.project.charmander.picturies.listItems;
 public class ImageListItem {
     public int iconId;
     public String title;
+    public String description;
 }
