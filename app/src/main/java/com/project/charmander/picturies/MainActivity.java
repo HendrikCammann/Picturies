@@ -165,7 +165,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#a31258")));
 
-        ImageButton toCameraButton = (ImageButton) findViewById(R.id.camera_button);
+        ImageView toCameraButton = (ImageView) findViewById(R.id.camera_button);
         toCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,7 +393,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String descriptionInput = description.getText().toString();
 
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 256, 256, false);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(titleInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
                 double lng = marker.getPosition().longitude;
@@ -403,7 +403,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
                 //Datenbank
 
-//                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
+                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
             }
         });
 
@@ -444,7 +444,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String titleInput = titel.getText().toString();
                 String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 256, 256, false);
 
                 Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
