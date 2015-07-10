@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -22,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,9 +53,26 @@ import com.project.charmander.picturies.fragments.ImageListViewActivity;
 import com.project.charmander.picturies.fragments.ReadReportActivity;
 import com.project.charmander.picturies.fragments.SettingsActivity;
 import com.project.charmander.picturies.helper.UserSessionManager;
+import com.project.charmander.picturies.model.Picture;
 import com.project.charmander.picturies.model.User;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
+import org.apache.http.entity.ByteArrayEntity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
     public static final String TAG=MainActivity.class.getSimpleName();
@@ -107,6 +126,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         HashMap<String, String> user = session.getUserDetails();
         String name = user.get(UserSessionManager.KEY_NAME);
         String email = user.get(UserSessionManager.KEY_EMAIL);
+        String password = user.get(UserSessionManager.KEY_PASSWORD);
+        String userId = "org.couchdb.user:"+name;
+
+        mCurrentUser = new User(userId, name, email, password);
 
         Log.d(TAG, name + email);
 
@@ -341,7 +364,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
 
-        // result for picture add from gallery
+        // result for picture add from camera
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
 
             ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
@@ -358,20 +381,28 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
         addPictureDialog.setTitle("Erinnerung hinzufügen");
 
-        final EditText titel = (EditText) addPictureDialog.findViewById(R.id.editText);
+        final EditText title = (EditText) addPictureDialog.findViewById(R.id.pictureTitleEditText);
+        final EditText description = (EditText) addPictureDialog.findViewById(R.id.pictureDescriptionEditText);
         final ImageView addImage = (ImageView) addPictureDialog.findViewById(R.id.selectedImage);
 
         Button saveButton = (Button) addPictureDialog.findViewById(R.id.speichern_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String titelInput = titel.getText().toString();
+                String titleInput = title.getText().toString();
+                String descriptionInput = description.getText().toString();
+
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
-                mMap.addMarker(new MarkerOptions().position(point).title(titelInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(titleInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+                double lat = marker.getPosition().latitude;
+                double lng = marker.getPosition().longitude;
+
                 addPictureDialog.dismiss();
                 Toast.makeText(getBaseContext(), "Bild hinzugefügt", Toast.LENGTH_LONG).show();
-                // den ganzen Scheiss in die DB
+
+                //Datenbank
+                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
             }
         });
 
@@ -406,15 +437,23 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText titel = (EditText) addPictureFromCameraDialog.findViewById(R.id.editText);
+                final EditText titel = (EditText) addPictureFromCameraDialog.findViewById(R.id.pictureTitleEditText);
+                final EditText description = (EditText) addPictureDialog.findViewById(R.id.pictureDescriptionEditText);
                 final ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
-                String titelInput = titel.getText().toString();
+                String titleInput = titel.getText().toString();
+                String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
 
-                mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titelInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+                double lat = marker.getPosition().latitude;
+                double lng = marker.getPosition().longitude;
+
                 addPictureFromCameraDialog.dismiss();
                 Toast.makeText(getBaseContext(), "Bild hinzugefügt", Toast.LENGTH_LONG).show();
+
+                //Datenbank
+                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
             }
         });
 
@@ -431,6 +470,56 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(i, CAMERA_REQUEST);
     }
+
+
+    public void sendImageToDatabase(String title, String description, double latitude, double longitude, Bitmap picture){
+
+        //TODO: Abfangen kein Bild!
+        //TODO: ProgressSpinner
+        UUID id = UUID.randomUUID();
+        Calendar c = Calendar.getInstance();
+        Date currentDate = c.getTime();
+
+        Picture uploadedPicture = new Picture(id, title, mCurrentUser, currentDate, latitude, longitude, picture, description);
+        String json = uploadedPicture.generateJson();
+        //TODO: Bild in Array einfügen
+
+        final String databaseURL ="http://charmander.iriscouch.com/pictures/"+id.toString();
+        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        RequestBody requestBody = RequestBody.create(JSON, json);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(databaseURL)
+                .header("Content-Type", "application/json")
+                .put(requestBody)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d(TAG, "Request gescheitert");
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(response.isSuccessful()){
+                    Log.d(TAG,response.toString());
+                    if(response.code() == 201){
+                        Log.d(TAG, response.body().string());
+                    }
+                }
+                else{
+                    Log.d(TAG,response.toString() + "ResponseBody: " +response.body().string());
+                }
+            }
+        });
+
+    }
+
+
 }
 
 
