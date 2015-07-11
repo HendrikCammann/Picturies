@@ -75,3 +75,5 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         }
     }
 }
+
+//http://charmander.iriscouch.com/pictures/_design/mypictures/_view/mypictures?key=%22org.couchdb.user%3Ahendrik%22

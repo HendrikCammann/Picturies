@@ -24,8 +24,7 @@ public class Picture {
     private double mLatitude;
     private double mLongitude;
 
-    //TODO: überlegen, ob das sinnvoll ist
-    ArrayList<Roadtrip> mUsedInList;
+    private Roadtrip mBericht;
 
 
     //Constructor
@@ -112,14 +111,13 @@ public class Picture {
         mLongitude = longitude;
     }
 
-    public ArrayList<Roadtrip> getUsedInList() {
-        return mUsedInList;
+    public Roadtrip getBericht() {
+        return mBericht;
     }
 
-    public void setUsedInList(ArrayList<Roadtrip> usedInList) {
-        mUsedInList = usedInList;
+    public void setBericht(Roadtrip bericht) {
+        mBericht = bericht;
     }
-
 
     public String generateJson(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss z");
@@ -147,6 +145,21 @@ public class Picture {
         String encodedImage = Base64.encodeToString(b, Base64.NO_WRAP);
 
         return encodedImage;
+    }
+
+    @Override
+    public String toString() {
+        return "Picture{" +
+                "mImageId=" + mImageId +
+                ", mImage=" + mImage +
+                ", mName='" + mName + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mCreator=" + mCreator +
+                ", mCreated=" + mCreated +
+                ", mLatitude=" + mLatitude +
+                ", mLongitude=" + mLongitude +
+                ", mBericht=" + mBericht +
+                '}';
     }
 
     //TODO: Methoden um etwas zu der Liste dazu zu adden oder zu löschen

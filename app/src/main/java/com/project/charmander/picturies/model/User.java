@@ -95,4 +95,7 @@ public class User {
         mRoadtrips = roadtrips;
     }
 
+    public void addPictureToList(Picture picture) {
+        mPictures.add(picture);
+    }
 }

@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,7 +22,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,23 +50,29 @@ import com.project.charmander.picturies.fragments.ImageDetailViewActivity;
 import com.project.charmander.picturies.fragments.ImageListViewActivity;
 import com.project.charmander.picturies.fragments.ReadReportActivity;
 import com.project.charmander.picturies.fragments.SettingsActivity;
+import com.project.charmander.picturies.helper.PictureHelper;
 import com.project.charmander.picturies.helper.UserSessionManager;
 import com.project.charmander.picturies.model.Picture;
 import com.project.charmander.picturies.model.User;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.apache.http.entity.ByteArrayEntity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -111,6 +115,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     UserSessionManager session;
     public User mCurrentUser;
 
+    //Marker
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +124,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         setContentView(R.layout.activity_main);
 
         session = new UserSessionManager(getApplicationContext());
-
         if(session.checkLogin()){
             finish();
         }
@@ -131,7 +136,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
         mCurrentUser = new User(userId, name, email, password);
 
-        Log.d(TAG, name + email);
 
 
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -306,6 +310,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Lat, Lng), 15.0f));
+        getInfoAboutMarkerFromDatabase();
     }
 
     @Override
@@ -369,6 +374,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
             ImageView addImage = (ImageView) addPictureFromCameraDialog.findViewById(R.id.selectedImage);
 //            titel = (EditText) addPictureDialog.findViewById(R.id.editText);
+           //TODO: Bilderegröße
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             addImage.setImageBitmap(photo);
         }
@@ -403,7 +409,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
                 //Datenbank
 
-//                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
+               sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
             }
         });
 
@@ -520,8 +526,99 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     }
 
+    public void getInfoAboutMarkerFromDatabase() {
+
+        String parameter = "";
+        try {
+            parameter = URLEncoder.encode("\""+mCurrentUser.getUserId()+"\"", "UTF-8" );
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String databaseURL = "http://charmander.iriscouch.com/pictures/_design/mypictures/_view/mypictures?key="+parameter;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(databaseURL)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d(TAG, "Request gescheitert in getInfoAboutMarkerFromDatabase()");
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                if(response.isSuccessful()){
+                    String jsonData = response.body().string();
+
+                    //TODO: JSON auslesen & in Pictures schreiben, Pictures set Marker in runonGui
+
+                    try {
+                        JSONObject mypictures = new JSONObject(jsonData);
+                        JSONArray rows = mypictures.getJSONArray("rows");
+
+                        for(int i=1; i < rows.length(); i++){
+                            JSONObject pictures = rows.getJSONObject(i);
+                            JSONObject picture = pictures.getJSONObject("value");
+
+
+                            UUID id = UUID.fromString(picture.getString("_id"));
+                            final String title = picture.getString("title");
+                            User creator = mCurrentUser;
+
+                            DateFormat format = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss z");
+                            Date created = format.parse(picture.getString("created"));
+
+                            double latitude = picture.getDouble("latitude");
+                            double longitude = picture.getDouble("longitude");
+                            String description = picture.getString("description");
+
+                            //TODO: falsch!
+                            //TODO: Konzept überdenken mit Bilder! Marker setzen und später Bild ändern oder so ähnlich
+                            Bitmap imageInput= BitmapFactory.decodeResource(getResources(), R.drawable.walter);
+                            final Bitmap image = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
+
+                            //final Picture bild = new Picture(id,title, creator, created, latitude, longitude, image, description);
+
+
+                            //TODO: wd probieren mit paramterübergabe und in der neuen Methode dann set Marker! & Map updaten
+                            final LatLng point = new LatLng(latitude, longitude);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //mCurrentUser.addPictureToList(bild);
+                                    mMap.addMarker(new MarkerOptions().position(point).title(title).icon(BitmapDescriptorFactory.fromBitmap(image)));
+                                }
+                            });
+
+                        }
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else {
+                    Log.d(TAG, response.toString());
+                }
+
+            }
+        });
+
+    }
 
 }
+
+//TODO: network available
 
 
 

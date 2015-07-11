@@ -210,9 +210,6 @@ public class LoginActivity extends AppCompatActivity {
                         String serverId = jsonUser.getString("_id");
                         String email = jsonUser.getString("email");
 
-                        User currentUser = new User(serverId, username, email, password);
-                        //TODO: putExtra User
-
                         session.createUserLoginSession(username,email,password);
 
                         // Starting MainActivity
