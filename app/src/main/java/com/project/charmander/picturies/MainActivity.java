@@ -92,6 +92,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
+    MenuItem listIcon;
 
     //Maps
     private GoogleMap mMap;
@@ -120,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     UserSessionManager session;
     public User mCurrentUser;
 
-    MenuItem listIcon;
+    //Styling
     Display display;
     Point size = new Point();
     int width;
@@ -333,6 +334,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.setMyLocationEnabled(true);
+            getInfoAboutMarkerFromDatabase();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -433,7 +435,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String descriptionInput = description.getText().toString();
 
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 200, 200, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
                 double lng = marker.getPosition().longitude;
@@ -471,7 +473,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         addPictureFromCameraDialog = new Dialog(contextForAddPicture);
         addPictureFromCameraDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addPictureFromCameraDialog.setContentView(R.layout.on_map_add_picture_dialog);
-        addPictureFromCameraDialog.getWindow().setLayout(width - 20, height - 20);
+        addPictureFromCameraDialog.getWindow().setLayout(width-20, height-20);
 
         Button saveButton = (Button) addPictureFromCameraDialog.findViewById(R.id.speichern_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -483,7 +485,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String titleInput = titel.getText().toString();
                 String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 200, 200, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
 
                 Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
