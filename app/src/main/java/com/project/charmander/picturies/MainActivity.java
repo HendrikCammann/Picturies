@@ -434,7 +434,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String descriptionInput = description.getText().toString();
 
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 200, 200, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
                 double lng = marker.getPosition().longitude;
@@ -484,7 +484,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String titleInput = titel.getText().toString();
                 String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 200, 200, false);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
 
                 Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
