@@ -91,6 +91,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
+    MenuItem listIcon;
 
     //Maps
     private GoogleMap mMap;
@@ -119,7 +120,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     UserSessionManager session;
     public User mCurrentUser;
 
-    MenuItem listIcon;
+    //Styling
     Display display;
     Point size = new Point();
     int width;
@@ -219,7 +220,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private void addDrawerItems() {
         String[] osArray = {"Bericht erstellen", "Berichte lesen", "Freunde", "Einstellungen", "Logout"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mAdapter = new ArrayAdapter<String>(this, R.layout.navigation_list_item, R.id.navigation_name, osArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -332,6 +333,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.setMyLocationEnabled(true);
+            getInfoAboutMarkerFromDatabase();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -612,7 +614,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                             //TODO: falsch!
                             //TODO: Konzept überdenken mit Bilder! Marker setzen und später Bild ändern oder so ähnlich
                             Bitmap imageInput= BitmapFactory.decodeResource(getResources(), R.drawable.walter);
-                            final Bitmap image = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
+                            final Bitmap image = Bitmap.createScaledBitmap(imageInput, 200, 200, false);
 
                             //final Picture bild = new Picture(id,title, creator, created, latitude, longitude, image, description);
 
