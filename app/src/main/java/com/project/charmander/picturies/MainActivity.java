@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -26,10 +27,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -112,6 +115,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     UserSessionManager session;
     public User mCurrentUser;
 
+    MenuItem listIcon;
+    Display display;
+    Point size = new Point();
+    int width;
+    int height;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +202,16 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 return false;
             }
         });
+
+        getScreenDimensions();
+
+    }
+
+    private void getScreenDimensions() {
+        display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
     }
 
     private void addDrawerItems() {
@@ -268,7 +287,17 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.custom, menu);
+        listIcon = menu.findItem(R.id.map_Change);
+        updateActionBarIcon();
         return true;
+    }
+
+    public void updateActionBarIcon() {
+        if(!mapOpen) {
+            listIcon.setIcon(R.drawable.map);
+        } else {
+            listIcon.setIcon(R.drawable.liste);
+        }
     }
 
     @Override
@@ -278,10 +307,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             if(!mapOpen) {
                 Intent i = new Intent(this, MainActivity.class);
                 startActivity(i);
+                updateActionBarIcon();
                 return true;
             } else {
                 getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, imageListView).commit();
                 mapOpen = false;
+                updateActionBarIcon();
             }
         }
 
@@ -380,10 +411,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private void addPictureFromGallery(final LatLng point) {
         addPictureDialog = new Dialog(contextForAddPicture);
+        addPictureDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
         addPictureDialog.setContentView(R.layout.on_map_add_picture_dialog);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        addPictureDialog.setTitle("Erinnerung hinzufügen");
+        addPictureDialog.getWindow().setLayout(width-20, height-20);
 
         final EditText title = (EditText) addPictureDialog.findViewById(R.id.pictureTitleEditText);
         final EditText description = (EditText) addPictureDialog.findViewById(R.id.pictureDescriptionEditText);
@@ -433,10 +463,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private void addPictureFromCamera() {
         addPictureFromCameraDialog = new Dialog(contextForAddPicture);
+        addPictureFromCameraDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addPictureFromCameraDialog.setContentView(R.layout.on_map_add_picture_dialog);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        addPictureFromCameraDialog.setTitle("Erinnerung hinzufügen");
+        addPictureFromCameraDialog.getWindow().setLayout(width-20, height-20);
 
         Button saveButton = (Button) addPictureFromCameraDialog.findViewById(R.id.speichern_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -475,7 +504,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(i, CAMERA_REQUEST);
     }
-
 
     public void sendImageToDatabase(String title, String description, double latitude, double longitude, Bitmap picture){
 
