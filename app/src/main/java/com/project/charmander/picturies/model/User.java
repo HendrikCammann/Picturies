@@ -25,6 +25,8 @@ public class User {
         mUsername = username;
         mEmail = email;
         mPassword = password;
+
+        mPictures = new  ArrayList<Picture>();
     }
 
     //Getter & Setter

@@ -71,6 +71,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -167,7 +168,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             Lng = location.getLongitude ();
         }
         catch (NullPointerException e){
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
         addDrawerItems();
@@ -418,7 +419,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         addPictureDialog = new Dialog(contextForAddPicture);
         addPictureDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
         addPictureDialog.setContentView(R.layout.on_map_add_picture_dialog);
-        addPictureDialog.getWindow().setLayout(width-20, height-20);
+        addPictureDialog.getWindow().setLayout(width - 20, height - 20);
 
         final EditText title = (EditText) addPictureDialog.findViewById(R.id.pictureTitleEditText);
         final EditText description = (EditText) addPictureDialog.findViewById(R.id.pictureDescriptionEditText);
@@ -470,7 +471,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         addPictureFromCameraDialog = new Dialog(contextForAddPicture);
         addPictureFromCameraDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addPictureFromCameraDialog.setContentView(R.layout.on_map_add_picture_dialog);
-        addPictureFromCameraDialog.getWindow().setLayout(width-20, height-20);
+        addPictureFromCameraDialog.getWindow().setLayout(width - 20, height - 20);
 
         Button saveButton = (Button) addPictureFromCameraDialog.findViewById(R.id.speichern_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -609,23 +610,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                             double longitude = picture.getDouble("longitude");
                             String description = picture.getString("description");
 
-                            //TODO: falsch!
-                            //TODO: Konzept überdenken mit Bilder! Marker setzen und später Bild ändern oder so ähnlich
-                            Bitmap imageInput= BitmapFactory.decodeResource(getResources(), R.drawable.walter);
-                            final Bitmap image = Bitmap.createScaledBitmap(imageInput, 128, 128, false);
-
-                            //final Picture bild = new Picture(id,title, creator, created, latitude, longitude, image, description);
-
-
-                            //TODO: wd probieren mit paramterübergabe und in der neuen Methode dann set Marker! & Map updaten
-                            final LatLng point = new LatLng(latitude, longitude);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //mCurrentUser.addPictureToList(bild);
-                                    mMap.addMarker(new MarkerOptions().position(point).title(title).icon(BitmapDescriptorFactory.fromBitmap(image)));
-                                }
-                            });
+                            setMarker(id, title, creator, created, latitude, longitude, description);
 
                         }
 
@@ -645,6 +630,45 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             }
         });
 
+    }
+
+    private void setMarker(final UUID id, final String title, final User creator, final Date created, final double latitude, final double longitude, final String description) {
+        String imageUrl = "http://charmander.iriscouch.com/pictures/"+id.toString()+"/"+id.toString()+".png";
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(imageUrl)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d(TAG, "Request gescheitert");
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                InputStream inputStream = response.body().byteStream();
+                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+                if(response.isSuccessful()){
+                    Picture picture = new Picture(id,title, creator, created, latitude, longitude, bitmap, description);
+                    mCurrentUser.addPictureToList(picture);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Bitmap resizedImage = Bitmap.createScaledBitmap(bitmap, 175, 175, false);
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(title).icon(BitmapDescriptorFactory.fromBitmap(resizedImage)));
+                        }
+                    });
+
+
+                }
+            }
+        });
     }
 
 }
