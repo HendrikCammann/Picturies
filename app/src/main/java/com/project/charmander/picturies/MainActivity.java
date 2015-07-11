@@ -39,6 +39,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,6 +60,7 @@ import com.project.charmander.picturies.helper.PictureHelper;
 import com.project.charmander.picturies.helper.UserSessionManager;
 import com.project.charmander.picturies.model.Picture;
 import com.project.charmander.picturies.model.User;
+import com.project.charmander.picturies.styles.RoundImage;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -89,6 +92,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     //Navigation
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
+    private RelativeLayout mDrawerContent;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
@@ -98,8 +102,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private GoogleMap mMap;
     private String provider;
     private LocationManager locationManager;
-    private Double Lat = 47.61;
-    private Double Lng = 7.61;
+    private Double Lat = 48.050101;
+    private Double Lng = 8.210285;
     boolean mapOpen = true;
 
     //Fragments
@@ -126,6 +130,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     Point size = new Point();
     int width;
     int height;
+    ImageView toRoundPicture;
+    TextView userName;
+    RoundImage roundedImage;
 
 
     @Override
@@ -150,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
 
         mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerContent = (RelativeLayout) findViewById(R.id.drawer_content);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
@@ -220,8 +228,17 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     private void addDrawerItems() {
+
+        toRoundPicture = (ImageView) findViewById(R.id.profile_picture);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.ruth);
+        roundedImage = new RoundImage(bm);
+        toRoundPicture.setImageDrawable(roundedImage);
+
+        userName = (TextView) findViewById(R.id.profile_name);
+        userName.setText(mCurrentUser.getUsername());
+
         String[] osArray = {"Bericht erstellen", "Berichte lesen", "Freunde", "Einstellungen", "Logout"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mAdapter = new ArrayAdapter<String>(this, R.layout.navigation_list_item, R.id.navigation_name, osArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -232,22 +249,22 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                     case 0:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, createReport).commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        mDrawerLayout.closeDrawer(mDrawerContent);
                         break;
                     case 1:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, readReport).commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        mDrawerLayout.closeDrawer(mDrawerContent);
                         break;
                     case 2:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, friends).commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        mDrawerLayout.closeDrawer(mDrawerContent);
                         break;
                     case 3:
                         mapOpen = false;
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, settings).commit();
-                        mDrawerLayout.closeDrawer(mDrawerList);
+                        mDrawerLayout.closeDrawer(mDrawerContent);
                         break;
                     case 4:
                         mapOpen = false;
@@ -436,6 +453,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
+                Bitmap resizedBitmapForDB = Bitmap.createScaledBitmap(imageInput, 120, 80, false);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(point).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
                 double lng = marker.getPosition().longitude;
@@ -445,7 +463,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
                 //Datenbank
 
-                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
+                sendImageToDatabase(titleInput, descriptionInput, lat, lng, resizedBitmapForDB); //resizedBitmap/resizedBitmapForDB statt imageInput
             }
         });
 
@@ -486,6 +504,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 String descriptionInput = description.getText().toString();
                 Bitmap imageInput = ((BitmapDrawable) addImage.getDrawable()).getBitmap();
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
+                Bitmap resizedBitmapForDB = Bitmap.createScaledBitmap(imageInput, 120, 80, false);
 
                 Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
@@ -495,7 +514,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 Toast.makeText(getBaseContext(), "Bild hinzugefügt", Toast.LENGTH_LONG).show();
 
                 //Datenbank
-                sendImageToDatabase(titleInput, descriptionInput, lat, lng, imageInput);
+                sendImageToDatabase(titleInput, descriptionInput, lat, lng, resizedBitmapForDB);
             }
         });
 
@@ -666,7 +685,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(title).icon(BitmapDescriptorFactory.fromBitmap(resizedImage)));
                         }
                     });
-
 
                 }
             }
