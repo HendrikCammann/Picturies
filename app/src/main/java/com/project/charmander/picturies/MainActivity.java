@@ -211,8 +211,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             public boolean onMarkerClick(Marker marker) {
 
                 mapOpen = false;
+//                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, imageDetailView).commit();
+//                Toast.makeText(getBaseContext(), marker.toString(), Toast.LENGTH_LONG).show();
+                String posInArray = marker.getSnippet();
+                int position = Integer.parseInt(posInArray);
+
+                Bundle args = new Bundle();
+                args.putInt("position", position);
+                imageDetailView.setArguments(args);
                 getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, imageDetailView).commit();
-                Toast.makeText(getBaseContext(), marker.toString(), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
@@ -685,7 +692,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                         public void run() {
 
                             Bitmap resizedImage = Bitmap.createScaledBitmap(bitmap, 175, 175, false);
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(title).icon(BitmapDescriptorFactory.fromBitmap(resizedImage)));
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title).snippet(mCurrentUser.getPictures().size() - 1 + "").icon(BitmapDescriptorFactory.fromBitmap(resizedImage)));
 
                             anzahlPictures = (TextView) findViewById(R.id.profile_upload_pictures);
                             anzahlPictures.setText(mCurrentUser.getPictures().size()+ " Bilder");
