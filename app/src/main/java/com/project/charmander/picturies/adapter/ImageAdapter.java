@@ -1,6 +1,7 @@
 package com.project.charmander.picturies.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -10,30 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.project.charmander.picturies.fragments.ImageDetailViewActivity;
-import com.project.charmander.picturies.fragments.ReportDetailActivity;
-import com.project.charmander.picturies.listItems.ImageListItem;
 import com.project.charmander.picturies.R;
+import com.project.charmander.picturies.model.Picture;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private LayoutInflater inflater;
-    List<ImageListItem> data = Collections.emptyList();
     final Fragment detail = new ImageDetailViewActivity();
     FragmentTransaction ft;
+    private ArrayList<Picture> mPictures;
 
 
-    public ImageAdapter(Context context, List<ImageListItem> data) {
+    public ImageAdapter(Context context, ArrayList<Picture> pictures) {
 
         ft = ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
         inflater = LayoutInflater.from(context);
-        this.data = data;
+        mPictures = pictures;
     }
 
     @Override
@@ -46,34 +44,40 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-
-        ImageListItem current = data.get(position);
-
-        holder.information.setText(current.title);
-        holder.thumpnail.setImageResource(current.iconId);
+        holder.bindPicture( mPictures.get(position));
     }
 
     @Override
     public int getItemCount() {
-
-        return data.size();
+        return mPictures.size();
     }
 
     class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView information;
-        ImageView thumpnail;
+        TextView mInformation;
+        ImageView mThumpnail;
+        public Picture mPicture;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            information = (TextView) itemView.findViewById(R.id.image_information);
-            thumpnail = (ImageView) itemView.findViewById(R.id.image_thumpnail);
+            mInformation = (TextView) itemView.findViewById(R.id.image_information);
+            mThumpnail = (ImageView) itemView.findViewById(R.id.image_thumpnail);
             itemView.setOnClickListener(this);
+        }
+
+        public void bindPicture(Picture picture){
+            mPicture = picture;
+            mInformation.setText(picture.getName());
+            mThumpnail.setImageBitmap(picture.getImage());
+
         }
 
         @Override
         public void onClick(View v) {
 //            Toast.makeText(v.getContext(), "Click", Toast.LENGTH_SHORT).show();
+            Bundle args = new Bundle();
+            args.putInt("position", getPosition());
+            detail.setArguments(args);
             ft.replace(R.id.main_fragment, detail).commit();
         }
     }

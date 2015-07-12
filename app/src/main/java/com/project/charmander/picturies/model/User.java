@@ -100,4 +100,8 @@ public class User {
     public void addPictureToList(Picture picture) {
         mPictures.add(picture);
     }
+
+    public Picture getPicture(int position) {
+        return mPictures.get(position);
+    }
 }

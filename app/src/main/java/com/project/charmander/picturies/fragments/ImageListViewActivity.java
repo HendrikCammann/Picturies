@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.project.charmander.picturies.MainActivity;
 import com.project.charmander.picturies.R;
 import com.project.charmander.picturies.adapter.ImageAdapter;
 import com.project.charmander.picturies.listItems.ImageListItem;
@@ -30,7 +31,7 @@ public class ImageListViewActivity extends Fragment {
 
         imageList = (RecyclerView) rootView.findViewById(R.id.image_list);
 
-        adapter = new ImageAdapter(getActivity(), getData());
+        adapter = new ImageAdapter(getActivity(), MainActivity.getCurrentUser().getPictures());
         imageList.setAdapter(adapter);
         imageList.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;

@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     //Login
     UserSessionManager session;
-    public User mCurrentUser;
+    public static User mCurrentUser;
 
     //Styling
     Display display;
@@ -132,6 +132,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     int height;
     ImageView toRoundPicture;
     TextView userName;
+    TextView anzahlPictures;
     RoundImage roundedImage;
 
 
@@ -534,6 +535,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public void sendImageToDatabase(String title, String description, double latitude, double longitude, Bitmap picture){
 
+        mCurrentUser.setPictures(new ArrayList<Picture>());
+
         //TODO: Abfangen kein Bild!
         //TODO: ProgressSpinner
         UUID id = UUID.randomUUID();
@@ -683,12 +686,19 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
                             Bitmap resizedImage = Bitmap.createScaledBitmap(bitmap, 175, 175, false);
                             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(title).icon(BitmapDescriptorFactory.fromBitmap(resizedImage)));
+
+                            anzahlPictures = (TextView) findViewById(R.id.profile_upload_pictures);
+                            anzahlPictures.setText(mCurrentUser.getPictures().size()+ " Bilder");
                         }
                     });
 
                 }
             }
         });
+    }
+
+    public static User getCurrentUser(){
+        return mCurrentUser;
     }
 
 }
