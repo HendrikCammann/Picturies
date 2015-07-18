@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="3 Berichte"
+            android:text="0 Berichte"
             android:id="@+id/profile_report"
             android:layout_below="@+id/profile_picture"
             android:layout_alignStart="@+id/profile_picture"

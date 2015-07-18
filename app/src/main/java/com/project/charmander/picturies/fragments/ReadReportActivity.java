@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.project.charmander.picturies.MainActivity;
 import com.project.charmander.picturies.R;
 import com.project.charmander.picturies.adapter.ReportAdapter;
 import com.project.charmander.picturies.listItems.ReportListItem;
@@ -30,7 +31,7 @@ public class ReadReportActivity extends Fragment {
 
         reportList = (RecyclerView) rootView.findViewById(R.id.report_list);
 
-        adapter = new ReportAdapter(getActivity(), getData());
+        adapter = new ReportAdapter(getActivity(), MainActivity.getCurrentUser().getRoadtrips());
         reportList.setAdapter(adapter);
         reportList.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;

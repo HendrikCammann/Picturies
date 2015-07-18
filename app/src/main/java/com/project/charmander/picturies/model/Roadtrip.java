@@ -1,14 +1,18 @@
 package com.project.charmander.picturies.model;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Jenny on 22.06.2015.
  */
 public class Roadtrip {
 
-    private int mRoadtripId;
+    private UUID mRoadtripId;
     private String mName;
     private String mDescription;
     private User mCreator;
@@ -18,23 +22,39 @@ public class Roadtrip {
     private Date mEnd;
 
     private ArrayList<Picture> mPictures;
+    private ArrayList<String> mPictureIds;
 
 
     //Constructor
-    public Roadtrip(int roadtripId, String name, User creator, Date created) {
+    public Roadtrip(UUID roadtripId, String name, User creator, Date created, ArrayList<String> pictureIds) {
         mRoadtripId = roadtripId;
         mName = name;
         mCreator = creator;
         mCreated = created;
+        mPictureIds = pictureIds;
     }
+
+    public Roadtrip(UUID roadtripId, String name, ArrayList<Picture> pictures, User creator, Date created) {
+        mRoadtripId = roadtripId;
+        mName = name;
+        mCreator = creator;
+        mCreated = created;
+        mPictures = pictures;
+
+        mPictureIds = new ArrayList<String>();
+        for(int i=0; i < pictures.size(); i++ ){
+            mPictureIds.add(pictures.get(i).getImageId().toString());
+        }
+    }
+
 
     //Getter & Setter
 
-    public int getRoadtripId() {
+    public UUID getRoadtripId() {
         return mRoadtripId;
     }
 
-    public void setRoadtripId(int roadtripId) {
+    public void setRoadtripId(UUID roadtripId) {
         mRoadtripId = roadtripId;
     }
 
@@ -92,6 +112,32 @@ public class Roadtrip {
 
     public void setPictures(ArrayList<Picture> pictures) {
         mPictures = pictures;
+    }
+
+    public String generateJson() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss z");
+        String strDate = sdf.format(mCreated);
+
+        String json = "{\"title\":\"" + mName + "\","
+                + "\"creator\":\"" + mCreator.getUserId() + "\","
+                + "\"created\":\"" + strDate + "\","
+                + "\"pictures\":[";
+
+        for(int i=0; i < mPictureIds.size(); i++) {
+            if(i==mPictureIds.size()-1){
+                json = json +"{ \"id\":\"" + mPictureIds.get(i) + "\"}";
+            }
+            else {
+                json = json +"{ \"id\":\"" + mPictureIds.get(i) + "\"},";
+            }
+        }
+
+        json=  json +  "],"
+                + "\"description\":\"" + mDescription + "\""
+                + "}";
+
+        return json;
     }
 
 

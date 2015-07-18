@@ -27,6 +27,7 @@ public class User {
         mPassword = password;
 
         mPictures = new  ArrayList<Picture>();
+        mRoadtrips = new ArrayList<Roadtrip>();
     }
 
     //Getter & Setter
@@ -104,4 +105,10 @@ public class User {
     public Picture getPicture(int position) {
         return mPictures.get(position);
     }
+
+    public void addRoadtripToList(Roadtrip roadtrip) {
+        mRoadtrips.add(roadtrip);
+    }
+
+    public Roadtrip getRoadtrip(int position) { return mRoadtrips.get(position);}
 }

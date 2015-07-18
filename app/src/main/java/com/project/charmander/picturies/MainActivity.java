@@ -59,6 +59,7 @@ import com.project.charmander.picturies.fragments.SettingsActivity;
 import com.project.charmander.picturies.helper.PictureHelper;
 import com.project.charmander.picturies.helper.UserSessionManager;
 import com.project.charmander.picturies.model.Picture;
+import com.project.charmander.picturies.model.Roadtrip;
 import com.project.charmander.picturies.model.User;
 import com.project.charmander.picturies.styles.RoundImage;
 import com.squareup.okhttp.Call;
@@ -225,6 +226,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         });
 
         getScreenDimensions();
+        getRoadtripInfoFromDatabase();
+
+
 
     }
 
@@ -359,7 +363,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             mMap.setMyLocationEnabled(true);
-            getInfoAboutMarkerFromDatabase();
+            //getInfoAboutMarkerFromDatabase();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -514,6 +518,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageInput, 175, 175, false);
                 Bitmap resizedBitmapForDB = Bitmap.createScaledBitmap(imageInput, 120, 80, false);
 
+                //TODO: WIIIIICHTIG!!!!
                 Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Lat, Lng)).title(titleInput).snippet(descriptionInput).icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
                 double lat = marker.getPosition().latitude;
                 double lng = marker.getPosition().longitude;
@@ -541,8 +546,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     public void sendImageToDatabase(String title, String description, double latitude, double longitude, Bitmap picture){
-
-        mCurrentUser.setPictures(new ArrayList<Picture>());
 
         //TODO: Abfangen kein Bild!
         //TODO: ProgressSpinner
@@ -591,6 +594,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public void getInfoAboutMarkerFromDatabase() {
 
+        mCurrentUser.setPictures(new ArrayList<Picture>());
+
+
         String parameter = "";
         try {
             parameter = URLEncoder.encode("\""+mCurrentUser.getUserId()+"\"", "UTF-8" );
@@ -625,7 +631,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                         JSONObject mypictures = new JSONObject(jsonData);
                         JSONArray rows = mypictures.getJSONArray("rows");
 
-                        for(int i=1; i < rows.length(); i++){
+                        for(int i=0; i < rows.length(); i++){
                             JSONObject pictures = rows.getJSONObject(i);
                             JSONObject picture = pictures.getJSONObject("value");
 
@@ -703,6 +709,100 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             }
         });
     }
+
+
+
+     public void getRoadtripInfoFromDatabase() {
+
+        mCurrentUser.setRoadtrips(new ArrayList<Roadtrip>());
+
+
+        String parameter = "";
+        try {
+            parameter = URLEncoder.encode("\"" + mCurrentUser.getUserId() + "\"", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String databaseURL = "http://charmander.iriscouch.com/roadtrips/_design/myroadtrips/_view/myroadtrips?key="+parameter;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(databaseURL)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.d(TAG, "Request gescheitert in getRoadtripInfoFromDatabase()");
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                if(response.isSuccessful()){
+                    String jsonData = response.body().string();
+
+                    try {
+                        JSONObject myroadtrips = new JSONObject(jsonData);
+                        JSONArray rows = myroadtrips.getJSONArray("rows");
+
+                        for(int i=0; i < rows.length(); i++){
+                            JSONObject roadtrips = rows.getJSONObject(i);
+                            JSONObject roadtrip = roadtrips.getJSONObject("value");
+
+
+                            UUID id = UUID.fromString(roadtrip.getString("_id"));
+                            final String title = roadtrip.getString("title");
+                            User creator = mCurrentUser;
+
+                            DateFormat format = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss z");
+                            Date created = format.parse(roadtrip.getString("created"));
+
+                            String description = roadtrip.getString("description");
+                            JSONArray pictureIds= roadtrip.getJSONArray("pictures");
+
+                            ArrayList<String> pIds = new ArrayList<String>();
+
+                            for (int j = 0; j < pictureIds.length(); j++) {
+                                JSONObject row = pictureIds.getJSONObject(j);
+                                String pictureIdAsString = row.getString("id");
+                                pIds.add(pictureIdAsString);
+                            }
+
+                            Roadtrip roadtripFromDatabase = new Roadtrip(id, title, creator, created, pIds);
+                            mCurrentUser.addRoadtripToList(roadtripFromDatabase);
+
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            TextView anzahlRoadtrips = (TextView) findViewById(R.id.profile_report);
+                            anzahlRoadtrips.setText(mCurrentUser.getRoadtrips().size()+ " Berichte");
+                        }
+                    });
+
+                }
+                else {
+                    Log.d(TAG, response.toString());
+                }
+
+            }
+        });
+
+    }
+
 
     public static User getCurrentUser(){
         return mCurrentUser;
