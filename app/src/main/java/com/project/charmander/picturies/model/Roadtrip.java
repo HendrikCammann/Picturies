@@ -106,6 +106,14 @@ public class Roadtrip {
         mEnd = end;
     }
 
+    public ArrayList<String> getPictureIds() {
+        return mPictureIds;
+    }
+
+    public void setPictureIds(ArrayList<String> pictureIds) {
+        mPictureIds = pictureIds;
+    }
+
     public ArrayList<Picture> getPictures() {
         return mPictures;
     }

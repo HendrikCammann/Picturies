@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import com.project.charmander.picturies.R;
 import com.project.charmander.picturies.listItems.ReportDetailListItem;
+import com.project.charmander.picturies.model.Picture;
+import com.project.charmander.picturies.model.Roadtrip;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,11 +21,12 @@ import java.util.List;
 public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapter.ReportDetailViewHolder> {
     private LayoutInflater inflater;
     List<ReportDetailListItem> data = Collections.emptyList();
+    ArrayList<Picture> mPictures;
 
-    public ReportDetailAdapter(Context context, List<ReportDetailListItem> data) {
+    public ReportDetailAdapter(Context context, ArrayList<Picture> pictures ) {
 
         inflater = LayoutInflater.from(context);
-        this.data = data;
+        mPictures = pictures;
     }
 
     @Override
@@ -35,23 +39,26 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapte
 
     @Override
     public void onBindViewHolder(ReportDetailViewHolder holder, int position) {
-
-        ReportDetailListItem current = data.get(position);
-
-        holder.information.setText(current.Description);
-        holder.thumpnail.setImageResource(current.IconID);
+        holder.bindPicture(mPictures.get(position));
     }
 
     @Override
     public int getItemCount() {
 
-        return data.size();
+        return mPictures.size();
     }
 
     class ReportDetailViewHolder extends RecyclerView.ViewHolder {
 
         TextView information;
         ImageView thumpnail;
+        Picture mPicture;
+
+        public void bindPicture(Picture picture){
+            mPicture = picture;
+            information.setText(picture.getName() + " - " + picture.getDescription());
+            thumpnail.setImageBitmap(picture.getImage());
+        }
 
         public ReportDetailViewHolder(View itemView) {
             super(itemView);
