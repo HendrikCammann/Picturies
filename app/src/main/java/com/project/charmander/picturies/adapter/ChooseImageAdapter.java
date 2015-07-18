@@ -56,6 +56,12 @@ public class ChooseImageAdapter extends RecyclerView.Adapter<ChooseImageAdapter.
     }
 
     @Override
+    public int getItemViewType(int position) {
+
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
 
         return mPictures.size();

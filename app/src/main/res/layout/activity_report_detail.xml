@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent">
+
 
         <ImageView
             android:layout_width="fill_parent"
@@ -30,64 +28,13 @@
             android:layout_below="@+id/report_detail_headerimage"
             android:layout_marginTop="10dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="'Nach 15 Stunden Flug endlich in Rio angekommen :-)'"
-            android:id="@+id/report_information_1"
+        <android.support.v7.widget.RecyclerView
             android:layout_below="@+id/report_detail_headline"
-            android:layout_alignLeft="@+id/report_picture_1"
-            android:layout_alignStart="@+id/report_picture_1" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:id="@+id/report_picture_1"
-            android:src="@drawable/plane"
-            android:scaleType="centerCrop"
-            android:layout_below="@+id/report_information_1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="'Ein wunderbares Hotel direkt an der Copacabana! Die Kinder sind schon am Pool, Christopf ist joggen und ich packe die Koffer aus...'"
-            android:id="@+id/report_information_2"
-            android:layout_below="@+id/report_picture_1"
-            android:layout_alignLeft="@+id/report_picture_2"
-            android:layout_alignStart="@+id/report_picture_2" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:id="@+id/report_picture_2"
-            android:src="@drawable/hotel"
-            android:scaleType="centerCrop"
-            android:layout_below="@+id/report_information_2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="'Gut gegessen und nun einen ruhigen Abend an der Bar!'"
-            android:id="@+id/report_information_3"
-            android:layout_below="@+id/report_picture_2"
-            android:layout_alignLeft="@+id/report_picture_3"
-            android:layout_alignStart="@+id/report_picture_3" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:layout_margin="10dp"
-            android:id="@+id/report_picture_3"
-            android:src="@drawable/bar"
-            android:scaleType="centerCrop"
-            android:layout_below="@+id/report_information_3" />
-
-    </RelativeLayout>
+            android:id="@+id/report_detail_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
-</ScrollView>
+</RelativeLayout>
+
+
